@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="field">
+    <object name="person"/>
+    <object name="horse"/>
+    <object name="cow"/>
+  </place>
+</scene_prop>

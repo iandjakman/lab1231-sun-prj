@@ -1,0 +1,9 @@
+<scene_prop>
+  <place name="livingroom">
+    <object name="tvmonitor"/>
+    <object name="chair"/>
+    <object name="dog"/>
+    <object name="diningtable"/>
+    <object name="sofa"/>
+  </place>
+</scene_prop>

@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="field">
+    <object name="sheep"/>
+    <object name="bird"/>
+  </place>
+</scene_prop>

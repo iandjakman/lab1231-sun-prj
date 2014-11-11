@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="restaurant">
+    <object name="tvmonitor"/>
+    <object name="bottle"/>
+    <object name="person"/>
+  </place>
+</scene_prop>

@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="beach">
+    <object name="person"/>
+    <object name="bird"/>
+    <object name="boat"/>
+  </place>
+</scene_prop>

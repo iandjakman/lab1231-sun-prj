@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="trainstation">
+    <object name="person"/>
+    <object name="train"/>
+    <object name="bicycle"/>
+  </place>
+</scene_prop>

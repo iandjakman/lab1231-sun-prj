@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="airport">
+    <object name="car"/>
+    <object name="aeroplane"/>
+  </place>
+</scene_prop>

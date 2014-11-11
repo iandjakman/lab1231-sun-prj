@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="road">
+    <object name="car"/>
+    <object name="person"/>
+    <object name="bus"/>
+  </place>
+</scene_prop>

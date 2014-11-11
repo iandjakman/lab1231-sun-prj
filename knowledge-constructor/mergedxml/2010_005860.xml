@@ -1,0 +1,7 @@
+<scene_prop>
+  <place name="parkinglot">
+    <object name="pottedplant"/>
+    <object name="car"/>
+    <object name="bicycle"/>
+  </place>
+</scene_prop>

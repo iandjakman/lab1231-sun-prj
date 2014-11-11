@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="field">
+    <object name="bicycle"/>
+    <object name="bottle"/>
+  </place>
+</scene_prop>

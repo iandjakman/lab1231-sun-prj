@@ -1,0 +1,8 @@
+<scene_prop>
+  <place name="town">
+    <object name="pottedplant"/>
+    <object name="person"/>
+    <object name="bicycle"/>
+    <object name="bottle"/>
+  </place>
+</scene_prop>

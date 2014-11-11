@@ -1,0 +1,5 @@
+<scene_prop>
+  <place name="garden">
+    <object name="pottedplant"/>
+  </place>
+</scene_prop>

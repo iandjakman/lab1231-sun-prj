@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="airport">
+    <object name="bus"/>
+    <object name="person"/>
+  </place>
+</scene_prop>

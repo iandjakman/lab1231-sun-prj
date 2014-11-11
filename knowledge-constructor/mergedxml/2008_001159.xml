@@ -1,0 +1,5 @@
+<scene_prop>
+  <place name="port">
+    <object name="boat"/>
+  </place>
+</scene_prop>

@@ -4,7 +4,7 @@ from PIL import Image
 
 cooccurMeta=open("metadata/cooccurrenceMeta.txt","w")	
 
-Class Metadata:
+class Metadata:
 	def constructOccurrenceMetadata(datasetDirectory) :
 	
 		path=datasetDirectory

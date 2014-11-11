@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="restaurant">
+    <object name="pottedplant"/>
+    <object name="car"/>
+  </place>
+</scene_prop>

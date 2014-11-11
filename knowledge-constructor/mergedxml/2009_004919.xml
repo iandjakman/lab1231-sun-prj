@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="livingroom">
+    <object name="pottedplant"/>
+    <object name="person"/>
+  </place>
+</scene_prop>

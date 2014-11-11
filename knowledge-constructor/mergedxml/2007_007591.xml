@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="parkinglot">
+    <object name="bus"/>
+    <object name="car"/>
+  </place>
+</scene_prop>

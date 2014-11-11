@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="race circuit">
+    <object name="car"/>
+    <object name="person"/>
+  </place>
+</scene_prop>

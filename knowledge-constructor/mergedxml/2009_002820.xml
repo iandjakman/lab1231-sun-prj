@@ -1,0 +1,6 @@
+<scene_prop>
+  <place name="workspace">
+    <object name="tvmonitor"/>
+    <object name="bird"/>
+  </place>
+</scene_prop>

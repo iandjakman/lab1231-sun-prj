@@ -5,10 +5,12 @@ import voc_obj_intolbl
 import voc_obj_lbltoin
 import voc_spa_intopos
 import datetime
-from shapely.geometry import Point
+import cv2
+import numpy as np
 from PIL import Image
 from lxml import etree
 from io import StringIO, BytesIO
+from skimage.segmentation import slic
 from positionSearcher import PositionSearcher
 
 #dictionary
@@ -18,6 +20,7 @@ indexToPosDict=voc_spa_intopos.POS
 
 class KnowledgeConstructor:	
 	
+	output_path=None
 	traindat=None
 	xmldat=None
 	rxmlpath=None
@@ -30,7 +33,6 @@ class KnowledgeConstructor:
 	spatial_top_portion=None
 	spatial_center_portion=None
 	spatial_bottom_portion=None
-	sXMLName=None
 	placeList=None
 	activityList=None
 	propertyArray=None
@@ -40,12 +42,12 @@ class KnowledgeConstructor:
 	relative_is_below_threshold = None
 	generatedTime=None
     
-	def __init__(self, fileOutputName):
+	def __init__(self, path):
 		
-		cName="csv/cooccur" + fileOutputName +".csv"
-		sName="csv/spatial" + fileOutputName +".csv"
-		self.sXMLName=fileOutputName
+		cName="csv/cooccur.csv"
+		sName="csv/spatial.csv"
 		
+		self.output_path = path
 		self.cOutFile=open(cName,"w")
 		self.spatialFile=open(sName,"w")
 		self.spatialSize=len(indexToPosDict)+1
@@ -60,13 +62,12 @@ class KnowledgeConstructor:
 	def set_training_data_dir(self, dataset_dir):
 		self.traindat=dataset_dir
 	
-	def set_xml_data_dir(self, xml_dir):
-		self.xmldat=xml_dir
-		self.rxmlpath="/home/ian-djakman/Documents/data/voc_dataset/VOCdevkit/VOC2012/voc_xml"
+	def set_general_xml_data_dir(self, sceneprop_dir):
+		self.xmldat=sceneprop_dir
 		
-	def set_dictionary_name(self, dict_name):
-		print()
-	
+	def set_relative_position_xml_data_dir(self, relative_dir):
+		self.rxmlpath=relative_dir
+
 	def writePrintS(self):
 		print("")
 		print("")
@@ -137,31 +138,34 @@ class KnowledgeConstructor:
 		for x in range (1,self.cArraySize):
 			lbl = self.spatialArray[x][0]
 			annoClass = etree.SubElement(s_tree_writer, lbl)
-			tv= self.spatialArray[x][1]
-			cv= self.spatialArray[x][2]
-			bv= self.spatialArray[x][3]
-			ov= self.spatialArray[x][4]
+			top_value    = self.spatialArray[x][1]
+			center_value = self.spatialArray[x][2]
+			bottom_value = self.spatialArray[x][3]
+			overall_value= self.spatialArray[x][4]
+			
 			annoT = etree.SubElement(annoClass, "top")
-			annoT.set("freq", str(tv))
-			if ov!=0:
-				annoT.set("norm_freq", str(tv/ov))
+			annoT.set("freq", str(top_value))
+			if overall_value!=0:
+				annoT.set("norm_freq", str(top_value/overall_value))
 			else:
 				annoT.set("norm_freq", "0.00")
+				
 			annoC = etree.SubElement(annoClass, "center")
-			annoC.set("freq", str(cv))
-			if ov!=0:
-				annoC.set("norm_freq", str(cv/ov))
+			annoC.set("freq", str(center_value))
+			if overall_value!=0:
+				annoC.set("norm_freq", str(center_value/overall_value))
 			else:
 				annoC.set("norm_freq", "0.00")
+				
 			annoB = etree.SubElement(annoClass, "bottom")
-			annoB.set("freq", str(bv))
-			if ov!=0:
-				annoB.set("norm_freq", str(bv/ov))
+			annoB.set("freq", str(bottom_value))
+			if overall_value!=0:
+				annoB.set("norm_freq", str(bottom_value/overall_value))
 			else:
 				annoB.set("norm_freq", "0.00")
 			
 		writer = etree.ElementTree(s_tree_writer)
-		xmlFilename='xmlout/spatial_knowledge.xml'
+		xmlFilename= self.output_path + '/spatial_knowledge.xml'
 		writer.write(xmlFilename, pretty_print=True)
 	
 	def cXML(self):
@@ -194,8 +198,9 @@ class KnowledgeConstructor:
 				else:
 					subsubsub.set('norm_freq', "0.0")
 		
-		xml_filepath = 'xmlout/cooccurence_knowledge.xml'
+		xml_filepath = self.output_path + '/cooccurence_knowledge.xml'
 		writer = etree.ElementTree(root)
+		print(xml_filepath)
 		writer.write(xml_filepath, pretty_print=True)
 	
 	def pXML(self):
@@ -228,7 +233,7 @@ class KnowledgeConstructor:
 					subsubsub.set("norm_freq", str(subval/total))
 				else:
 					subsubsub.set("norm_freq", "0.0")
-		xml_filepath = "xmlout/scene_properties_knowledge.xml"
+		xml_filepath = self.output_path + "/scene_properties_knowledge.xml"
 		writer = etree.ElementTree(root)
 		writer.write(xml_filepath, pretty_print=True)
 		
@@ -280,7 +285,7 @@ class KnowledgeConstructor:
 				else:
 					subsubsub_around.set("norm_freq", "0.0")
 				
-		xml_filepath = 'xmlout/relative_knowledge.xml'
+		xml_filepath = self.output_path + '/relativeposition_knowledge.xml'
 		writer = etree.ElementTree(root)
 		writer.write(xml_filepath, pretty_print=True)
 			
@@ -344,7 +349,7 @@ class KnowledgeConstructor:
 			for x in range(0, setSize):
 				self.spatialArray[setListPart[x]][4] = self.spatialArray[setListPart[x]][4] + 1
 				
-		self.writePrintS()
+		#self.writePrintS()
 		self.sXML()
 			
 	def cooccurrence_knowledge(self):
@@ -373,7 +378,7 @@ class KnowledgeConstructor:
 				for y in range (0, setSize):
 					self.cooccurArray[setList[x]][setList[y]] = self.cooccurArray[setList[x]][setList[y]] + 1
 		
-		self.writePrintC()
+		#self.writePrintC()
 		self.cXML()
 	
 	def cooccurence_knowledge_from_xml(self):
@@ -426,7 +431,7 @@ class KnowledgeConstructor:
 				index_b = int(checked_b)
 				self.cooccurArray[index_a][index_b] = self.cooccurArray[index_a][index_b] + 1
 		
-		self.writePrintC()
+		#self.writePrintC()
 		self.cXML()
 		
 	def scene_properties_knowledge(self):
@@ -532,4 +537,25 @@ class KnowledgeConstructor:
 							self.rArray[obj1_arrayindex][obj2_arrayindex][2] = self.rArray[obj1_arrayindex][obj2_arrayindex][2] + 1
 						
 		self.rXML()
+		
+	def gould_relative_location_probability_map(self):
+		
+		files_to_read = glob.glob(os.path.join(self.traindat, '*.png'))
+		total = len(files_to_read)
+		prob_map = None
+		
+		for (num, imgfile) in enumerate(files_to_read):
+			
+			image = Image.open(imgfile)
+			img = img_as_float(image)
+			segment_list = slic(img, n_segments=200, compactness=25, sigma=2)
+			segment_amount = len(np.unique(segmentation))
+			
+			for each_class in range (0,len(indexToNameDict)):
+				given_class = indexToNameDict[str(each_class + 1)]
+				segment_containing_given_class = []
+				
+			
+			
+		print()
 

@@ -130,8 +130,8 @@ def get_best_perf(perfs, scoring):
 
 def main():
     #
-    regression_data_dir = '/home/tor/sun4/xprmnt/knowledge-compatibility-benchmarker-cvpr2015/regression-data'
-    out_dir = '/home/tor/sun4/xprmnt/knowledge-compatibility-benchmarker-cvpr2015/regression-eval'
+    regression_data_dir = '/home/ian-djakman/Documents/data/output/knowledge-compatibility-benchmarker/regression-data'
+    out_dir = '/home/ian-djakman/Documents/data/output/knowledge-compatibility-benchmarker/regression-eval'
 
     regression_data_filename  = 'voc2010_philippunary.csv'
     regression_data_filepath = regression_data_dir + '/' + regression_data_filename

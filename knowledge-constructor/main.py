@@ -2,18 +2,21 @@
 from knowledgeConstructor import KnowledgeConstructor
 
 # directory for training data and xml
-datasetVOC="/home/ian-djakman/Documents/data/voc_dataset/VOCdevkit/VOC2012/SegmentationClass"
-xmlVOC="/home/ian-djakman/Documents/data/voc_dataset/VOCdevkit/VOC2012/mergedxml"
-datasetTest="img/"
-datasetTest2="img2/"
+annotated_img_voc="/home/ian-djakman/Documents/data/input/voc_dataset_2012/SegmentationClass"
+sceneprop_xml_voc="/home/ian-djakman/Documents/data/input/voc_dataset_2012/ckpstar_modified_annotation"
+relation_xml_voc ="/home/ian-djakman/Documents/data/input/voc_dataset_2012/voc_gt_xml"
+output_path = "/home/ian-djakman/Documents/data/output/knowledge-compatibility-benchmarker/knowledge"
 				
-#Work to be done by the program is listed here
-vocKC = KnowledgeConstructor("VocOutput")
-vocKC.set_training_data_dir(datasetVOC)
-vocKC.set_xml_data_dir(xmlVOC)
-#vocKC.cooccurence_knowledge()
-#vocKC.cooccurence_knowledge_from_xml()
-#vocKC.spatial_knowledge(33.33 , 33.33 , 33.33)
+#Construct an Instance of Knowledge Constructor, providing its output name
+vocKC = KnowledgeConstructor(output_path)
+vocKC.set_training_data_dir(annotated_img_voc)
+vocKC.set_general_xml_data_dir(sceneprop_xml_voc)
+vocKC.set_relative_position_xml_data_dir(sceneprop_xml_voc)
+
+#Construct Knowledge
+vocKC.cooccurence_knowledge_from_xml()
+vocKC.spatial_knowledge(33.33 , 33.33 , 33.33)
 vocKC.scene_properties_knowledge ()
-#vocKC.relative_knowledge()
+vocKC.relative_knowledge(20.0 , 60.0)
+vocKC.gould_relative_knowledge()
 

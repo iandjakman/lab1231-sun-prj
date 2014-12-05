@@ -3,6 +3,8 @@
 import numpy as np 
 from lxml import etree
 from knowledge_loader import load_knowledge
+import sys
+sys.path.append("../util/src-py")
 from pascal_voc_2012 import translate
 from pascal_voc_2012 import class_name_map
 
@@ -26,7 +28,7 @@ def get_scene_class(filename):
     \param filename 
     \return scene class
     '''
-    annotation_dir = '/home/tor/sun3/dataset/pascal/VOC2012/VOCdevkit/VOC2012/ScenePropertyAnnotations/cikupastar-20141111/ScenePropertyAnnotations'
+    annotation_dir = '/home/ian-djakman/Documents/data/input/voc_dataset_2012/ckpstar_modified_annotation'
     filepath = annotation_dir + '/' + filename + '.xml'
 
     tree = etree.parse(filepath)
@@ -43,14 +45,15 @@ def extract_fea_c(ann, knowledge):
 
     probs = [knowledge[classes[i]][classes[j]] for i in range(len(classes)-1) for j in range(i+1,len(classes))]
     probs = np.asarray(probs)
-
-    n_element = 4
-    c = [0.0] * n_element
+	print(probs)
+    c = []
     if len(probs) != 0:
         c = [np.mean(probs), 
              np.percentile(probs, 25), 
              np.percentile(probs, 50), 
              np.percentile(probs, 75)]
+    else:
+        c = [0.0] * 4
 
     return c
 
@@ -74,18 +77,44 @@ def extract_fea_s(ann, knowledge):
                 prob = knowledge[ann_ij][spatial]
                 probs.append(prob)
 
-    n_element = 4
-    s = [0.0] * n_element
+    s = []
     if len(probs) != 0:
         s = [np.mean(probs), 
              np.percentile(probs, 25), 
              np.percentile(probs, 50), 
              np.percentile(probs, 75)]
+    else:
+        s = [0.0] * 4
     
     return s
 
 def extract_fea_r(ann, knowledge):
-    r = [0.0]
+    numeric_classes=list(set(ann.flatten()))
+    raw_classes = translate(numeric_classes)
+    classes = [i for i in raw_classes if i != 'background' and i!='void']
+    position = ['is_below','is_beside','is_around']
+    
+    
+    #for now, try to read each segments in annotation images
+    '''
+		for every images in dataset
+			for every object segment in images
+				check that segment position to another segment
+				see it's probability in constructed knowledge r
+				add the value to probs
+    '''
+    probs = [knowledge[classes[i]][position[j]][classes[k]]] for i in range(len(classes)-1) for j in range(len(position)-1) for k in range (i+1,len(classes))]
+    probs = np.asarray(probs)
+    print(probs)
+    r = []
+    
+    if len(probs) != 0:
+		r = [np.mean(probs), 
+             np.percentile(probs, 25), 
+             np.percentile(probs, 50), 
+             np.percentile(probs, 75)]
+    else:	
+		r = [0.0] * 4
     return r
 
 def extract_fea_p(ann, knowledge, filename):
@@ -101,13 +130,14 @@ def extract_fea_p(ann, knowledge, filename):
 
     probs = [knowledge[scene_class][obj] for obj in present_objects if scene_class in knowledge]
     
-    n_element = 4
-    p = [0.0] * n_element
+    p = []
     if len(probs) != 0:
         p = [np.mean(probs), 
              np.percentile(probs, 25), 
              np.percentile(probs, 50), 
              np.percentile(probs, 75)]
+    else:
+        p = [0.0] * 4
 
     return p
 

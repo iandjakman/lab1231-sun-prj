@@ -1,10 +1,10 @@
 #!/bin/sh
 
 #
-root_dir=/home/tor/sun4/xprmnt/knowledge-compatibility-benchmarker-cvpr2015
+root_dir=/home/ian-djakman/Documents/data/output/knowledge-compatibility-benchmarker
 
 ann_list_filename=ann_img.list
-ann_list_filepath=$root_dir/meta/split-voc2010-tor/$ann_list_filename
+ann_list_filepath=$root_dir/meta/split-voc2010-ian/$ann_list_filename
 
 knowledge_dir=$root_dir/knowledge
 ann_dir=$root_dir/annotation/annotation-philippunary
